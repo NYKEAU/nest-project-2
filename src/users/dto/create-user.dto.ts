@@ -17,6 +17,9 @@ export class CreateUserDto {
   @ApiProperty({ example: 'Paris' })
   ville: string;
 
-  @ApiProperty({ example: 'Tesla Model 3', required: false })
-  vehicule_par_defaut?: string;
+  @ApiProperty({
+    example: 'Tesla Model 3',
+    required: false,
+  })
+  vehicule_par_defaut: string;
 }

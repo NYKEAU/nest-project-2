@@ -1,4 +1,3 @@
-// src/auth/auth.service.ts
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/users.service';
@@ -13,7 +12,7 @@ export class AuthService {
 
   async validateUser(email: string, password: string): Promise<any> {
     const user = await this.usersService.findByEmail(email);
-    if (user && await bcrypt.compare(password, user.crypted_mdp)) {
+    if (user && (await bcrypt.compare(password, user.crypted_mdp))) {
       const { crypted_mdp, ...result } = user;
       return result;
     }
@@ -28,8 +27,8 @@ export class AuthService {
         id: user.id_user,
         email: user.mail,
         nom: user.nom,
-        prenom: user.prenom
-      }
+        prenom: user.prenom,
+      },
     };
   }
 }

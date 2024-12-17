@@ -21,12 +21,12 @@ export class User {
   @Column()
   ville: string;
 
-  @Column()
+  @Column({ nullable: true })
   vehicule_par_defaut: string;
 
-  @Column()
+  @Column({ nullable: true })
   id_chauffage: number;
 
-  @Column()
+  @Column({ nullable: true })
   id_emission: number;
 }

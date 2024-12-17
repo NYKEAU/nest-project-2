@@ -1,5 +1,10 @@
-// src/trips/entities/trip.entity.ts
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 
 @Entity('trajet')
@@ -22,9 +27,7 @@ export class Trip {
   @Column()
   id_emission: number;
 
-  @Column()
-  id_user: number;
-
-  @ManyToOne(() => User)
+  @ManyToOne(() => User, { nullable: false }) // Relation obligatoire
+  @JoinColumn({ name: 'id_user' }) // Définit le nom de la clé étrangère
   user: User;
 }
