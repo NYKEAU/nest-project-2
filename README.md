@@ -1,99 +1,166 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# NestJS Project Setup
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Ce projet est basé sur **NestJS** et utilise **TypeORM** pour la gestion des migrations et des entités. Suivez les étapes ci-dessous pour configurer le projet sur votre machine.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Prérequis
 
-## Description
+Avant de commencer, vous devez avoir installé les outils suivants sur votre machine :
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- **Node.js** (version 16 ou supérieure) : [Node.js](https://nodejs.org/)
+- **MySQL** (ou toute autre base de données supportée par TypeORM) : [MySQL](https://dev.mysql.com/downloads/)
+- **npm** (ou **yarn**) : [npm](https://www.npmjs.com/)
 
-## Project setup
+## Étape 1 : Cloner le projet
+
+Si vous n'avez pas encore cloné le projet, commencez par le faire avec la commande suivante :
 
 ```bash
-$ npm install
+git clone https://github.com/votre-utilisateur/nestjs-project.git
+cd nestjs-project
 ```
 
-## Compile and run the project
+## Étape 2 : Installer les dépendances
+
+Ensuite, installez les dépendances nécessaires au projet en utilisant npm :
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+npm install
 ```
 
-## Run tests
+Cela installera toutes les dépendances du projet définies dans le fichier `package.json`.
+
+## Étape 3 : Configuration de la base de données
+
+### 1. Créez votre base de données
+
+Avant de lancer le projet, vous devez configurer votre base de données MySQL. Vous pouvez créer une base de données en utilisant la ligne de commande MySQL ou un outil comme phpMyAdmin ou MySQL Workbench.
+
+Exemple avec la ligne de commande :
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+mysql -u root -p
+CREATE DATABASE nestjs;
 ```
 
-## Deployment
+### 2. Configurer le fichier de connexion à la base de données
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+Le fichier de configuration de TypeORM (connexion à la base de données) est situé dans `data-source.ts`. Ce fichier contient la configuration de la connexion à votre base de données MySQL.
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+Ouvrez `data-source.ts` et modifiez-le avec vos informations de connexion à la base de données.
+
+```typescript
+import { DataSource } from 'typeorm';
+import { User } from './src/users/entities/user.entity';
+import { Trip } from './src/trips/entities/trip.entity';
+import { Emission } from './src/emissions/entities/emission.entity';
+import { Heating } from './src/heating/entities/heating.entity';
+import { Vehicle } from './src/vehicules/entities/vehicle.entity';
+
+export const AppDataSource = new DataSource({
+  type: 'mysql',
+  host: 'localhost', // L'hôte de la base de données
+  port: 3306, // Le port MySQL (par défaut 3306)
+  username: 'root', // Nom d'utilisateur MySQL
+  password: 'root', // Mot de passe MySQL
+  database: 'nestjs', // Nom de la base de données que vous avez créée
+  entities: [User, Trip, Emission, Heating, Vehicle],
+  migrations: ['./src/migrations/*{.ts,.js}'],
+  synchronize: false, // Ne pas synchroniser automatiquement la base de données
+  logging: true, // Activer les logs pour les requêtes SQL
+});
+
+export default AppDataSource;
+```
+
+**Important** : Remplacez `root` et `root` par vos véritables identifiants de base de données si nécessaire.
+
+## Étape 4 : Exécuter les migrations
+
+### 1. Créez une migration
+
+Si vous avez déjà créé des entités et que vous avez besoin de créer une migration pour générer la structure de la base de données, vous pouvez utiliser la commande suivante :
 
 ```bash
-$ npm install -g mau
-$ mau deploy
+npm run typeorm migration:generate -- -d ./data-source.ts -n NomDeLaMigration
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+Cette commande générera une nouvelle migration dans le dossier `src/migrations/`.
 
-## Resources
+### 2. Appliquer les migrations
 
-Check out a few resources that may come in handy when working with NestJS:
+Pour appliquer les migrations et créer les tables dans votre base de données, utilisez la commande suivante :
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+```bash
+npm run typeorm migration:run -- -d ./data-source.ts
+```
 
-## Support
+Cela exécutera toutes les migrations en attente, et les tables seront créées dans votre base de données.
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+### 3. Annuler une migration
 
-## Stay in touch
+Si vous avez besoin d'annuler une migration, vous pouvez utiliser la commande suivante :
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+```bash
+npm run typeorm migration:revert -- -d ./data-source.ts
+```
 
-## License
+Cela annule la dernière migration appliquée.
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+## Étape 5 : Lancer l'application
+
+Une fois les migrations appliquées et la base de données configurée, vous pouvez démarrer le serveur NestJS en mode développement avec la commande suivante :
+
+```bash
+npm run start:dev
+```
+
+Cela démarrera l'application en mode développement et surveillera les modifications des fichiers.
+
+## Étape 6 : Tests
+
+Si vous souhaitez exécuter des tests unitaires, vous pouvez utiliser la commande suivante :
+
+```bash
+npm run test
+```
+
+Pour exécuter les tests en mode "watch" et voir les changements en direct :
+
+```bash
+npm run test:watch
+```
+
+Pour exécuter les tests de bout en bout (E2E) :
+
+```bash
+npm run test:e2e
+```
+
+## Étape 7 : Autres commandes utiles
+
+Voici quelques autres commandes utiles pour ce projet :
+
+- **Linter** : Pour vérifier le code et le formater avec ESLint et Prettier :
+  ```bash
+  npm run lint
+  ```
+- **Formatage** : Pour formater le code source avec Prettier :
+  ```bash
+  npm run format
+  ```
+- **Construction** : Pour construire l'application :
+  ```bash
+  npm run build
+  ```
+
+## Dépannage
+
+Si vous rencontrez des problèmes lors de l'installation ou de l'exécution du projet, voici quelques pistes à explorer :
+
+- **Problèmes de base de données** : Vérifiez que MySQL est bien installé et que la base de données existe. Vous pouvez aussi vérifier que le fichier `data-source.ts` est correctement configuré.
+- **Problèmes de migration** : Assurez-vous que la migration a bien été générée et que vous l'exécutez dans le bon ordre.
+- **Problèmes avec `ts-node`** : Si vous rencontrez des erreurs liées à `ts-node`, vous pouvez essayer de réinstaller les dépendances du projet avec `npm install`.
+
+## Conclusion
+
+Vous avez maintenant toutes les informations nécessaires pour configurer, migrer et lancer votre projet NestJS avec TypeORM. Si vous avez des questions ou rencontrez des problèmes, n'hésitez pas à consulter la documentation officielle de [NestJS](https://docs.nestjs.com/) et de [TypeORM](https://typeorm.io/).

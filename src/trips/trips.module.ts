@@ -1,3 +1,4 @@
+// src/trips/trips.module.ts
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TripsService } from './trips.service';

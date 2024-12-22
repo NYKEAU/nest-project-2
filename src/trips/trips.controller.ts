@@ -1,3 +1,4 @@
+// src/trips/trips.controller.ts
 import {
   Controller,
   Get,
