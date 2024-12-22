@@ -1,6 +1,6 @@
 // src/trips/dto/create-trip.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNumber, IsOptional, IsNotEmpty } from 'class-validator';
+import { IsString, IsNumber, IsNotEmpty } from 'class-validator';
 
 export class CreateTripDto {
   @ApiProperty({
