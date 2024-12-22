@@ -40,6 +40,24 @@ export class TripsService {
     }
   }
 
+  private async calculateEmissions(km: number): Promise<void> {
+    const transports = '4'; // Par exemple, pour voiture thermique (id 4)
+    const url = `https://impactco2.fr/api/v1/transport?km=${km}&displayAll=0&transports=${transports}&ignoreRadiativeForcing=0&occupencyRate=1&includeConstruction=0&language=fr`;
+
+    try {
+      const response = await axios.get(url);
+      // Afficher les émissions retournées dans la console
+      const emissionsData = response.data.data;
+      emissionsData.forEach((transport: { name: string; value: number }) => {
+        console.log(
+          `Transport: ${transport.name}, Emissions pour ${km} km: ${transport.value} gCO2`,
+        );
+      });
+    } catch (error) {
+      console.error('Erreur lors du calcul des émissions de CO2:', error);
+    }
+  }
+
   async create(createTripDto: CreateTripDto, userId: number): Promise<Trip> {
     try {
       // Calculer la distance à partir des adresses
@@ -47,6 +65,9 @@ export class TripsService {
         createTripDto.adresse_depart,
         createTripDto.adresse_arrivee,
       );
+
+      // Appeler l'API pour obtenir les émissions
+      await this.calculateEmissions(distance);
 
       // Passer directement un objet minimal pour la relation utilisateur
       const trip = this.tripsRepository.create({
